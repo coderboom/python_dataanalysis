@@ -235,3 +235,24 @@ numpy.identity(n, dtype=None)
 array_i1 = np.identity(5, dtype=float)
 print(array_i1)
 print(array_i1, type(array_i1))  # 123
+"""暂停流动性6个铭文币：UNIX（难对冲)、KONG（研究院）、QUARK（研究院）、AVAV（处理敞口后恢复）、FACET(充提没开，流动性差）、NOSTR（敞口大）
+研究院管理的QUARK，AVAV，KONG，FACET的POS触发，询问研究院如何处理：AVAV敞口放宽到10000u，到了再处理一半
+关注FACET价格及盘口价差情况，及时调整区间
+OK钱包资产9W（BTC，ETH，AVAX，SOL，AVAV,MATIC）小狐狸钱包0.8W（ETH，BNB，USDC）
+WSM暂停交易，更换合约（已暂停做市，对冲机器人），等运营通知后续恢复交易
+SPONGE走下架流程。在MEXC换合约，币暂时提不回来
+AIGC初始值还有一点点没恢复，可以所内买。
+XMR在kucoin充提已经恢复，可以提币过去对冲
+AVAV在dex还有两笔没成交，其余的usdt都已经划到做市账户了
+FACET_USDT充提无法开，流动性差，做市定价困难，推下架（john)
+SPOODY如果有敞口先让财务购买下，ok钱包买的不显示：可以推下架（John）
+有一笔VOYA的提现没有gas费，财务跟链端处理中：跟进
+做市敞口管理：损益求和，敞口求和，展示（请数据组沟通优化）
+DEX对冲币对敞口预警播报：每小时播报一次，播报的数据延后半小时，跟进优化情况
+下午17点有新币上线，注意提前开启机器人
+NOSTR卖单pos触发，财务从币安提BTC需要人脸识别，等财务之后再试一下。
+转到了合约对冲账户50w usdt，找财务结算
+降低了现货btc，eth单边深度到880W，目前暂不恢复
+mexc的usdt不足，跟进往mexc提的usdt。
+降低了很多btc，eth成交量。跟进，恢复cg排名，动态调整。
+"""
