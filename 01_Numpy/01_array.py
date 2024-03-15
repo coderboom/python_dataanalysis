@@ -234,3 +234,4 @@ numpy.identity(n, dtype=None)
 """
 array_i1 = np.identity(5, dtype=float)
 print(array_i1)
+print(array_i1, type(array_i1))  # 123
