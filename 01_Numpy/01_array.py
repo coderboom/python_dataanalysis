@@ -214,10 +214,10 @@ numpy.full(shape, fill_value, dtype=None, order='C')
 
 
 # 创建一个指定形状并用特定值填充的一维数组
-full_1d = np.full(shape, fill_value, dtype=type)
+full_1d = np.full(shape, fill_value, dtype=type) 
 
 # 创建一个指定形状并用特定值填充的二维数组
-full_2d = np.full(shape=(rows, cols), fill_value=value, dtype=type)
+full_2d = np.full(shape=(rows, cols), fill_valu e=value, dtype=type)
 """
 array_1f = np.full(5, fill_value=9)
 array_2f = np.full((3, 4), fill_value=1, dtype=float)
