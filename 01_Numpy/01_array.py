@@ -237,3 +237,23 @@ print(array_i1)
 print(array_i1, type(array_i1))  # 123
 
 print('-----------------identity()')  # 12313
+print('-----------------identity()')  # 12313
+print('-----------------identity()')  # 12313
+print('-----------------identity()')  # 12313
+print('-----------------identity()')  # 12313
+print('-----------------identity()')  # 12313
+print('-----------------identity()')  # 12313
+print('-----------------identity()')  # 12313
+print('-----------------identity()')  # 12313
+print('-----------------identity()')  # 12313
+print('-----------------identity()')  # 12313
+print('-----------------identity()')  # 12313
+print('-----------------identity()')  # 12313
+print('-----------------identity()')  # 12313
+print('-----------------identity()')  # 12313
+print('-----------------identity()')  # 12313
+print('-----------------identity()')  # 12313
+print('-----------------identity()')  # 12313
+print('-----------------identity()')  # 12313
+print('-----------------identity()')  # 12313
+print('-----------------identity()')  # 12313
