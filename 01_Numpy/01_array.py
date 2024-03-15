@@ -220,7 +220,7 @@ full_1d = np.full(shape, fill_value, dtype=type)
 full_2d = np.full(shape=(rows, cols), fill_value=value, dtype=type)
 """
 array_1f = np.full(5, fill_value=9)
-array_2f = np.full((3, 4), fill_value=1)
+array_2f = np.full((3, 4), fill_value=1, dtype=float)
 print(array_1f)
 print(array_2f)
 
@@ -234,3 +234,4 @@ numpy.identity(n, dtype=None)
 """
 array_i1 = np.identity(5, dtype=float)
 print(array_i1)
+print(array_i1, type(array_i1))  # 123
