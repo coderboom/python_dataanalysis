@@ -40,10 +40,11 @@ numpy.datetime64 和 numpy.timedelta64: 用于表示日期和时间间隔的类�
 """
 
 # 从列表创建一个一维数组
+"""在NumPy中，数组的形状（shape）是由数组的维度（dimensions）决定的。对于一维数组来说，它只有一维，没有行和列的概念，所以它的形状就是它的长度，即一个整数。"""
 a = np.array([1, 2, 3, 4])
 print(a, a.shape)  # 输出：[1 2 3 4]
-a1=a.T # 一维数组没有转置的概念
-print(a1.T) 
+a1 = a.T  # 一维数组没有转置的概念
+print(a1.T)
 
 # 创建一个二维数组，同时指定数据类型
 b = np.array([(1.5, 2, 3), (4, 5, 6)], dtype=np.float32)
@@ -154,51 +155,82 @@ print('------------------创建二维数组---------------')
 # 创建二维数组
 arr = np.array([[1, 2, 3], [4, 5, 6], [7, 8, 9]])
 print(arr)
-arr1=arr.T
+arr1 = arr.T  # 数组转置
 print(arr1)
+print('-----------------ones()-------------------')
+"""np.ones()是NumPy库中的一个函数，用于创建一个全为1的数组。您可以指定数组的形状，包括一维、二维乃至多维数组。
+numpy.ones(shape, dtype=None, order='C')
+
+    shape (必需参数)：指定要创建的数组的形状。它可以是一个整数（对于一维数组），也可以是一个表示多维数组各维度大小的元组，
+        例如 (3, 4) 表示一个3行4列的二维数组。
+    dtype (可选参数)：指定数组元素的数据类型，默认是 float64。可以设置为任何NumPy支持的数据类型，
+        如 int, float32, bool 等。
+    order (可选参数)：指定数组元素在内存中的存储顺序。'C'（默认）表示按行优先（C-style）存储，'F' 表示按列优先（Fortran-style）存储。
+        对于一维数组和全1数组来说，这个参数通常没有影响。
+
+# 创建一个全为1的一维数组
+ones_1d = np.ones(shape, dtype=type)
+# 其中shape是一个整数（例如：5）或者元组（例如：(5,)）
+
+# 创建一个全为1的二维数组
+ones_2d = np.ones(shape=(rows, cols), dtype=type)
+"""
+
+# 示例
+array_1d = np.ones(5)  # 创建长度为5的全1数组
+array_2d = np.ones((3, 4))  # 创建3行4列的全1二维数组
+
+print(array_1d)
+print(array_2d)
+print('-----------------zeros()-------------------')
+"""np.zeros()是NumPy库中的一个函数，用于创建一个全为0的数组。您可以指定数组的维度和数据类型。
+numpy.zeros(shape, dtype=float, order='C')
+    shape：指定要创建的数组的形状。
+    dtype：指定数组元素的数据类型，默认为float。
+    order：指定数组元素在内存中的存储顺序，默认为'C'，即按行存储。
+
+# 创建一个全为0的一维数组
+zeros_1d = np.zeros(shape, dtype=type)
+# 其中shape是一个整数（例如：5）或者元组（例如：(5,)）
+
+# 创建一个全为0的二维数组
+zeros_2d = np.zeros(shape=(rows, cols), dtype=type)
+"""
+# 示例
+array_1d = np.zeros(5)  # 创建长度为5的全0数组
+array_2d = np.zeros((3, 4), dtype=float)  # 创建3行4列的全0二维数组
+
+print(array_1d)
+print(array_2d)
+print('-----------------full()-------------------')
+"""np.full()是NumPy库中的一个函数，用于创建一个指定形状并用给定值填充的数组。这个函数接受两个必需参数：shape和fill_value。
+numpy.full(shape, fill_value, dtype=None, order='C')
+
+    shape (必需)：是一个整数或元组，用来定义输出数组的维度和大小。例如，如果你想要创建一个3行4列的二维数组，那么shape应为(3, 4)。
+    fill_value (必需)：是一个数值或者任何可以被NumPy支持的数据类型所接受的值，这个值会被填入到生成数组的所有元素中。
+    dtype (可选)：如果提供，将决定数组元素的数据类型，默认情况下根据fill_value自动推断数据类型。
+    order (可选)：内存布局选项， 'C'（默认）表示按行优先存储（C-style）， 'F' 表示按列优先存储（Fortran-style）。
+        对于全值填充的数组，此参数通常不会改变结果，因为它不影响元素内容。
 
 
+# 创建一个指定形状并用特定值填充的一维数组
+full_1d = np.full(shape, fill_value, dtype=type)
 
+# 创建一个指定形状并用特定值填充的二维数组
+full_2d = np.full(shape=(rows, cols), fill_value=value, dtype=type)
+"""
+array_1f = np.full(5, fill_value=9)
+array_2f = np.full((3, 4), fill_value=1)
+print(array_1f)
+print(array_2f)
 
+print('-----------------identity()-------------------')
+"""np.identity()函数用于生成一个单位矩阵，即对角线元素为1，其余元素为0的方阵。其参数如下：
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+numpy.identity(n, dtype=None)
+    n (必需)：这是一个整数，表示要创建的单位矩阵的维度（行数和列数）。单位矩阵总是方阵。
+    dtype (可选)：指定生成矩阵中元素的数据类型，默认是 float64。
+        可以根据需要设置为任何NumPy支持的数据类型，如 int, float32, complex 等。
+"""
+array_i1 = np.identity(5, dtype=float)
+print(array_i1)
