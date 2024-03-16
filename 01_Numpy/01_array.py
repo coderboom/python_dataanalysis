@@ -236,6 +236,7 @@ array_i1 = np.identity(5, dtype=float)
 print(array_i1)
 print(array_i1, type(array_i1))  # 123
 
+print('-----------------一维数组和二维数组的切片是浅复制-------------------')
 print('-----------------一维数组的索引-------------------')
 """Python的Numpy库中，一维数组的正索引和负索引如下：
 正索引：
@@ -284,8 +285,7 @@ print(a)
 print(array_2w[-1][-1], array_2w[-3][-3], array_2w[0][0])
 print(array_2w[-1, -1], array_2w[-3, -3], array_2w[0, 0])
 
-
-print('-----------------二维数组的切片-------------------') 
+print('-----------------二维数组的切片-------------------')
 bb = array_2w[1:2, 1:2]
 print(bb, bb.shape)  # [[77]] (1, 1)  #切出来的是1行1列的二维数组
 cc = array_2w[1:4, 1:4]
@@ -293,13 +293,426 @@ print(cc, cc.shape)  # 切出来的是3行3列的二维数组
 """[[77 88 99]
  [31 41 51]
  [29 39 49]] (3, 3)"""
-    
 
 print(array_2w[-1, :])
 print(array_2w[:, 4])  # 打印正向索引的第5列
-""" 二维数组切片知识点
+
+""" 
+二维数组切片知识点
+
 1、如果二维数组的0轴和1轴都是用的切片，则切出来的都是一个二维数组
 2、如果二维数组的0轴或者1轴用的是标量，则切出来的是一个一维数组
 3、如果二维数组的0轴和1轴都用的标量，则是取值操作
 """
 
+print('-----------------布尔索引（是深复制）-------------------')
+"""NumPy中的布尔索引允许您使用一个布尔数组作为索引，以选择原始数组中与该布尔数组相同形状且对应位置为True的元素。
+    这种索引方式非常灵活，可以用于过滤数据、选择满足特定条件的元素或子集等操作。
+布尔索引返回的新数组是原数组的副本，与原数组不共享相同的数据空间，即新数组的修改不会影响原数组————深复制
+"""
+# 一维数组的布尔索引
+arr = np.array([4, 2, 9, 6, 3, 7, 1, 5, 8])
+condition = arr % 2 == 0  # 创建一个布尔数组，判断是否为偶数
+print(condition)
+even_numbers = arr[condition]
+print(even_numbers, even_numbers.shape)  # 输出：[4 2 6 8] (4,)，即原数组中所有的偶数,一维数组
+
+"""多条件布尔索引： 当需要同时满足多个条件时，可以使用&（逻辑与）、|（逻辑或）和~（逻辑非）运算符来组合条件：
+"""
+arr = np.array([[1, 2, 3], [4, 5, 6], [7, 8, 9]])
+condition1 = arr > 4
+condition2 = arr < 8
+selected_elements = arr[condition1 & condition2]  # ----输出的是一维数组
+print(selected_elements, selected_elements.shape)  # 输出：[5 6 7] (3,)，即原数组中大于4且小于8的所有元素
+"""直接在索引中使用条件表达式：
+"""
+arr = np.array([0, 1, -2, 3, -4, 5])
+positive_or_zero = arr[arr >= 0]
+print(positive_or_zero)  # 输出：[0 1 3 5]，即原数组中非负数的所有元素
+
+# 二维数组的布尔索引
+arr2d = np.array([[10, 20, 30], [40, 50, 60], [70, 80, 90]])
+row_condition = arr2d[:, 1] > 50  # 根据第二列的值选择行,
+"""这里 row_condition 是根据第二列生成的一个一维布尔数组，它的长度为3，与 arr2d 的行数相同。
+    这意味着 row_condition 中的每个元素对应于 arr2d 的每一行。"""
+print(row_condition)  # [False False  True]
+selected_rows = arr2d[row_condition, :]  # 切出来的值是一个二维数组
+"""NumPy会使用 row_condition 中的布尔值来选择 arr2d 中对应的行。
+    当 row_condition 中某个位置的值为 True 时，该行将被选入 selected_rows 中。
+    由于 row_condition 的长度与 arr2d 的行数一致，因此这是一种有效的布尔索引操作，
+    并且结果 selected_rows 将是一个二维数组，其包含了原始数组中满足条件的行子集
+"""
+print(selected_rows, '-----', selected_rows.shape)  # 输出：[[70 80 90]]，即原数组中第二列大于50的行
+print('----')
+lie_condition = arr2d[1, :] >= 60  # 根据第二行中大于或等于60的条件筛选出所有行相同位置的列
+selected_lies = arr2d[:, lie_condition]
+print(selected_lies, selected_lies.shape)  # 切出来的是一个二维数组
+
+print('-----------------切片索引是浅复制；布尔索引是深复制-------------------')
+selected_rows[0, 2] = 99999999
+print(selected_rows)
+print(arr2d)
+print('----------------')
+arr2d_ = arr2d[1:, 1:]
+print(arr2d_)
+arr2d_[1, 1] = 1000000
+print(arr2d_)
+print(arr2d)
+
+print('----------------花式索引-------------------')
+"""
+NumPy的花式索引（Fancy indexing）是一种强大的索引机制，它允许你使用整数数组、布尔数组或其他类型的索引器来选择数组中的特定元素或子集。
+    这种方式提供了更多的灵活性，特别是在处理高维数组时。
+
+1、花式索引返回的新数组与--花式索引数组--形状相同
+2、花式索引返回的新数组与布尔索引类似，属于深层复制
+3、二维数组上每一个轴的索引数组相同
+"""
+# 通过传递一个整数数组作为索引，可以从数组中选择相应位置的元素。这些整数不必连续，也不必从小到大排序。
+arr = np.array([33, 11, 32, 83, 94, 52, 16, 107, 28, 39])
+fancy_indices = [3, 1, 7, 9]  # 索引列表
+arr11 = np.array([3, 1, 7, 9])  # 同样可作为索引
+selected_elements = arr[fancy_indices]
+print(selected_elements)
+print(arr[arr11])
+
+"""段代码使用了NumPy的索引功能，通过arr[d]的方式获取arr数组中特定位置的元素。 
+    具体来说，d是一个2x2的数组，它表示了我们要从arr中选取元素的行和列的索引。
+例如，d[0,0]表示选取arr的第一行第一列的元素，d[1,1]表示选取arr的第二行第二列的元素。 
+因此，arr[d]的意思是根据d中每个元素的行和列索引来选取arr中的元素。
+具体来说，选取的元素为：
+    arr[d[0,0]] = arr[1] = 11
+    arr[d[0,1]] = arr[2] = 32
+    arr[d[1,0]] = arr[3] = 83
+    arr[d[1,1]] = arr[4] = 94
+"""
+d = np.array([[1, 2],
+              [3, 4]])
+print(arr[d])  #
+# [[11 32]
+# [83 94]]
+
+
+# 布尔数组索引： 使用布尔数组作为索引时，布尔数组的长度必须与被索引数组的轴长度相同，且索引的位置对应着原数组的元素，True 对应的元素会被选择出来
+arr = np.array([10, 20, 30, 40, 50])
+bool_mask = arr > 30
+selected_elements = arr[bool_mask]
+print(selected_elements)
+print('-------')
+
+# 多维花式索引： 对于多维数组，花式索引可以同时作用于多个轴。
+arr2d = np.array([[10, 20, 30],
+                  [40, 50, 60],
+                  [70, 80, 90]])
+
+row_indices = [1, 2]
+col_indices = [0, 2]
+row_indices1 = np.array([1, 2])
+col_indices1 = np.array([0, 2])
+selected_submatrix = arr2d[row_indices, col_indices]
+selected_submatrix1 = arr2d[row_indices1, col_indices1]  # 效果同上，
+print(selected_submatrix)  # [40 90]
+print('1111')
+"""由于row_indices和col_indices都是列表，并且它们的长度相同，NumPy会进行广播（broadcasting），但不是以常规的二维子矩阵方式返回结果。
+
+在NumPy中，当使用两个一维数组作为多维数组的索引时，它将----按照元组对的形式---分别从行和列中--选择--元素。
+
+在这种情况下，arr2d[row_indices, col_indices]实际上是按顺序取每个(row_index, col_index)对的值：
+    第一对是 (1, 0)，所以选取的是第二行第一列的元素 40。
+    第二对是 (2, 2)，所以选取的是第三行第三列的元素 90。
+因此，输出的结果将会是 [40, 90] 而不是一个二维子矩阵。如果想要获取一个二维子矩阵，请确保行和列的索引提供的是完整的子集，
+
+例如使用嵌套列表结构或使用整数切片。正确的子矩阵选择应为
+selected_submatrix = arr2d[row_indices[:, np.newaxis], col_indices]
+"""
+arr_2y = arr2d[row_indices, 1]  # 选取row_indices行的第二列
+print(arr_2y)  # [50 80]
+print(arr2d[row_indices,])
+# [[40 50 60]
+#  [70 80 90]]
+arr_2y1 = arr2d[row_indices][1]  # arr2d[row_indices] ：第二和第三行的二维数组，arr2d[row_indices][1]:二维数组的第二行
+print(arr_2y1)  # [70 80 90]
+
+print('-----')
+# 传入二维数组作为二维数组的索引
+m = np.array([[1, 1],
+              [2, 0]])
+n = np.array([[1, 0],
+              [2, 2]])
+
+selected_submatrix2 = arr2d[m, n]
+print(selected_submatrix2)
+# [[50 40]
+#  [90 30]]
+
+print('----------------concatenate()、vstack()、hstack()-;拼接多个数组时，数组需要具有相同的维度------------------')
+print('----------------concatenate()-------------------')
+"""沿指定的轴连接多个数组
+用于连接（或拼接）多个数组的函数。它允许沿着指定轴（axis）将一维、二维或多维数组连成一个新的数组。
+
+函数签名： numpy.concatenate(tup, axis=0, out=None)
+
+参数说明：
+    tup：一个元组或者列表，其中包含了要进行拼接的数组序列，如 (a1, a2, ..., an)。
+        除了沿拼接轴（axis）上的尺寸可以不同之外，这些数组在其他轴的方向上必须具有匹配的形状，
+    axis（可选，默认值为0）：整数，表示沿哪个轴进行拼接操作。
+        如果 axis=0，则垂直拼接（即按行拼接），增加的是数组的第一维度（通常理解为增加更多的行）。
+        如果 axis=1，则水平拼接（即按列拼接），增加的是数组的第二维度（通常理解为增加更多的列）。
+    对于多维数组，可以选择其他轴进行拼接。
+    out（可选）：如果提供，则输出的数据会直接写入到这个预先分配的数组中。
+"""
+# 创建两个一维数组
+arr1 = np.array([1, 2, 3])
+arr2 = np.array([4, 5, 6])
+
+# 按默认方式（axis=0）拼接
+result_1d = np.concatenate((arr1, arr2))
+print(result_1d)  # 输出: [1 2 3 4 5 6]
+
+# 创建两个二维数组
+arr3 = np.array([[7, 8], [9, 10]])
+arr4 = np.array([[11, 12]])
+
+# 按行（axis=0）拼接二维数组
+result_2d_rows = np.concatenate((arr3, arr4), axis=0)
+print(result_2d_rows)
+# 输出: [[ 7  8]
+#        [ 9 10]
+#        [11 12]]
+
+# 按列（axis=1）拼接二维数组
+result_2d_cols = np.concatenate((arr3, arr4.T), axis=1)
+print(result_2d_cols)
+# 输出: [[ 7  8 11]
+#        [ 9 10 12]]
+print('----------------vstack()-------------------')
+"""沿垂直堆叠多个数组，相当于concatenate()中axis=0的情况，axis=1上的元素个素要相同
+numpy.vstack(tup)
+"""
+
+# 创建两个一维数组
+arr1 = np.array([1, 2, 3])
+arr2 = np.array([4, 5, 6])
+
+# 使用 vstack 函数将它们垂直堆叠起来
+result = np.vstack((arr1, arr2))
+print(result)
+# 输出: [[1, 2, 3],
+#        [4, 5, 6]]
+
+# 或者创建两个二维数组
+arr3 = np.array([[7, 8], [9, 10]])
+arr4 = np.array([[11, 12]])
+
+# 使用 vstack 将它们也垂直堆叠起来
+result_2d = np.vstack((arr3, arr4))
+print(result_2d)
+# 输出: [[ 7,  8],
+#        [ 9, 10],
+#        [11, 12]]
+print('----------------hstack()-------------------')
+"""沿水平方向堆叠多个数组，相当于concatenate()中axis=1的情况，axis=0上的元素个素要相同
+numpy.Hstack(tup)
+"""
+a = np.array([1, 2, 3])
+b = np.array([4, 5, 6])
+c = np.array([7, 8, 9])
+result = np.hstack((a, b, c))
+print(result)  # [1 2 3 4 5 6 7 8 9]
+
+d = np.array([[1, 2, 5],
+              [3, 4, 7],
+              [5, 7, 11]])
+e = np.array([[1, 2, 3]])
+result_3d = np.hstack((d, e.T))
+print(result_3d)
+
+print('----------------split()-------------------')
+"""
+用于将一个多维数组分割成多个子数组，沿着指定的轴进行分割。这个函数可以按照行（axis=0）或列（axis=1）或其他更高维度的方向来切割原数
+
+numpy.split(ary, indices_or_sections, axis=0)
+参数说明：
+    ary：要分割的原始多维数组。
+    indices_or_sections：数组是左闭右开
+        如果是一个整数，表示将数组分割成等份，份数由该值决定。
+        如果是一个整数列表或一维数组，则这些整数将作为分割点的位置，数组会在这些位置被分割————切片操作。
+    axis（可选，默认为0）：沿哪个轴进行分割操作。0代表按行分割，1代表按列分割（对于二维数组而言），对于更高维度的数组，可以选择其他轴。
+示例用法：
+"""
+# 创建一个一维数组
+a1 = np.array([1, 2, 3, 4, 5, 6, 7, 8, 9])
+aa = np.split(a1, 3)  # [array([1, 2, 3]), array([4, 5, 6]), array([7, 8, 9])]
+print(aa)
+
+a2 = np.arange(11, 55, 2)
+aaaa = np.split(a2, [7])
+print(aaaa)
+"""
+[array([11, 13, 15, 17, 19, 21, 23]), 
+array([25, 27, 29, 31, 33, 35, 37, 39, 41, 43, 45, 47, 49, 51, 53])]
+"""
+aa2 = np.array([4, 7])  # 按照这个索引进行切片，分成了三个数组
+aaa = np.split(a2, indices_or_sections=aa2)
+print(
+    aaa)
+""""
+[array([11, 13, 15, 17]), 
+array([19, 21, 23]), 
+array([25, 27, 29, 31, 33, 35, 37, 39, 41, 43, 45, 47, 49, 51, 53])]
+"""
+# 创建一个二维数组
+arr = np.array([[11, 13, 15, 17],
+                [25, 27, 29, 31],
+                [7, 8, 9, 10],
+                [37, 39, 41, 43]])
+
+# 按行分割，将数组分成4部分
+split_arrs = np.split(arr, 4, axis=0)
+print(
+    split_arrs)  # [array([[11, 13, 15, 17]]), array([[25, 27, 29, 31]]), array([[ 7,  8,  9, 10]]), array([[37, 39, 41, 43]])]
+
+split_arrs1 = np.split(arr, indices_or_sections=[1, 2], axis=0)  # 按照行索引（第二个素组）进行切片
+print(split_arrs1)  # [array([[11, 13, 15, 17]]), array([[25, 27, 29, 31]]), array([[ 7,  8,  9, 10],[37, 39, 41, 43]])]
+
+split_arrs2 = np.split(arr, indices_or_sections=[1, 2], axis=1)  # 按照列索引（第二个素组）进行切片
+print(split_arrs2)
+"""
+[array([[11],
+       [25],
+       [ 7],
+       [37]]),
+array([[13],
+       [27],
+       [ 8],
+       [39]]), 
+array([[15, 17],
+       [29, 31],
+       [ 9, 10],
+       [41, 43]])]
+"""
+print('----------------vsplit()-------------------')
+"""专门用于垂直分割多维数组，即沿着数组的第一个轴（axis=0）进行分割。
+该函数接收一个数组和一个分割点列表或一个整数作为参数，将原始数组拆分为多个子数组
+
+numpy.vsplit(ary, indices_or_sections)
+
+参数说明：
+    ary：要分割的多维数组。
+    indices_or_sections：
+    如果是一个整数 n，则将数组平均分割成 n 个子数组（如果无法平均分配，则最后一块可能会较小）。
+    如果是一个整数列表或一维数组，则数组将在这些指定的索引位置进行分割。
+"""
+# 创建一个二维数组
+arr = np.array([[1, 2, 3],
+                [4, 5, 6],
+                [7, 8, 9],
+                [10, 11, 12],
+                [25, 27, 29],
+                [39, 41, 43]])
+
+split_arrs11 = np.split(arr, indices_or_sections=[4])  # 从第4行开始分割，分割成了两部分，第5行在第二部分中
+print(split_arrs11)
+"""
+[array([[ 1,  2,  3],
+       [ 4,  5,  6],
+       [ 7,  8,  9],
+       [10, 11, 12]]),
+array([[25, 27, 29],
+       [39, 41, 43]])]
+"""
+# 垂直分割，在第二行和第四行进行分割，左闭右开
+split_arrs111 = np.vsplit(arr, [1, 3])
+print(split_arrs111)
+"""
+[array([[1, 2, 3]]), 
+array([[4, 5, 6],[7, 8, 9]]), 
+array([[10, 11, 12],
+       [25, 27, 29],
+       [39, 41, 43]])]
+"""
+# 若传入一个整数，将数组平均分割成两部分
+split_arrs_half = np.vsplit(arr, 2)
+print(split_arrs_half)
+"""
+[array([[1, 2, 3],
+       [4, 5, 6],
+       [7, 8, 9]]), 
+array([[10, 11, 12],
+       [25, 27, 29],
+       [39, 41, 43]])]
+"""
+print('----------------hsplit()-------------------')
+"""用于水平分割多维数组，即沿着数组的第二个轴（axis=1）进行分割。
+这个函数接收一个数组和一个分割点列表或一个整数作为参数，将原始数组沿着水平方向拆分成多个子数组。
+
+函数签名：numpy.hsplit(ary, indices_or_sections)
+
+ary：要分割的多维数组。
+    indices_or_sections：
+    如果是一个整数 n，则将数组的每一行在列方向上平均分割成 n 个子数组（如果无法平均分配，则最后一块可能会较小）。
+    如果是一个整数列表或一维数组，则数组的每一行将在这些指定的列索引位置进行分割。
+"""
+
+# 创建一个二维数组
+arr = np.array([[1, 2, 3, 4, 11, 22, 33, 44], [5, 6, 7, 8, 111, 222, 333, 444]])
+
+# 水平分割，将数组在第二个元素处分割
+split_arrs = np.hsplit(arr, [2])  # 从第三列分割，分割成了两部分，第三列在第二部分中
+print(split_arrs)
+"""
+[array([[1, 2],[5, 6]]), 
+array([[  3,   4,  11,  22,  33,  44],
+       [  7,   8, 111, 222, 333, 444]])]
+"""
+split_arrs1 = np.hsplit(arr, [2, 3])
+print(split_arrs1)
+"""
+[array([[1, 2], [5, 6]]), 
+array([[3],[7]]), 
+array([[  4,  11,  22,  33,  44],
+       [  8, 111, 222, 333, 444]])]
+"""
+# 若传入一个整数，将数组的每一行平均分割成两部分
+split_arrs_half = np.hsplit(arr, 2)
+print(split_arrs_half)
+"""
+[array([[1, 2, 3, 4], 
+        [5, 6, 7, 8]]), 
+array([[ 11,  22,  33,  44],
+       [111, 222, 333, 444]])]
+"""
+print('----------------数组运算-------------------')
+"""
+数学运算：
+算术运算：+、-、*、/、//（整数除）、**（乘方）
+
+数学函数：如 numpy.sin()、numpy.cos()、numpy.tan()、numpy.sqrt()（平方根）、numpy.log()（自然对数）、numpy.exp()（指数函数）
+
+矩阵运算：
+    矩阵乘法：使用 numpy.dot() 或 @ 运算符进行点积，对于二维数组，numpy.matmul() 可用于通用矩阵乘法。
+    矩阵转置：numpy.transpose() 或属性 .T
+    内积与外积：numpy.inner() 和 numpy.outer()
+数组操作：
+    形状变换：numpy.reshape()、numpy.resize()、numpy.ravel()（展平为一维数组）
+    元素级操作：如 numpy.maximum()、numpy.minimum()（元素级最大值、最小值）、numpy.clip()（限制元素范围）
+    广播机制：不同形状的数组在符合广播规则的情况下能自动匹配并进行运算
+合并与拆分数组：
+    合并：numpy.concatenate()（连接）、numpy.vstack()（垂直堆叠）、numpy.hstack()（水平堆叠）
+    拆分：numpy.split()、numpy.vsplit()（垂直分割）、numpy.hsplit()（水平分割）
+统计和汇总运算：
+    统计函数：numpy.mean()（平均值）、numpy.median()（中位数）、numpy.std()（标准差）、numpy.var()（方差）
+    函数应用于数组所有元素：如 numpy.sum()（求和）、numpy.min()（最小值）、numpy.max()（最大值）
+索引和切片：
+    使用索引访问或修改数组元素：arr[index]
+    切片获取子数组：arr[start:stop:step]
+    高级索引：使用布尔型数组、列表或其他数组作为索引
+条件逻辑：
+    逻辑运算：numpy.logical_and()、numpy.logical_or()、numpy.logical_not()
+    根据条件选择：numpy.where(condition, x, y) 返回满足条件的 x 值，否则返回 y 值
+类型转换：
+    类型转换函数：numpy.astype() 将数组转换为指定数据类型
+排序：
+    排序函数：numpy.sort() 对数组进行就地排序，numpy.argsort() 返回排序后的索引
+"""
+print('----------------一维数组算数运算-------------------')
